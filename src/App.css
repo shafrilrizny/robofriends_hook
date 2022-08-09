@@ -1,0 +1,14 @@
+@font-face {
+  font-family: 'Quick';
+  font-style: normal;
+  font-weight: normal;
+  src: local('The Quick South St Regular'), url('The Quick South St.woff') format('woff');
+  }
+
+  h1 {
+    font-family: 'Quick';
+    font-size: 5.0rem !important;
+    color: #FFFFFF;
+    background-color: #b600ff;
+  }
+
