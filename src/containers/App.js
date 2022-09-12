@@ -1,49 +1,45 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 import Cardlist from '../components/CardList';
 import SearchBox from '../components/SearchBox';
 import Scroll from '../components/Scroll';
 import ErrorBoundry from "../components/ErrorBoundry";
 import './App.css';
 
-class App extends Component {
-    constructor () {
-        super()
-        this.state = {
-            robots: [],
-            searchfield: ''
-        }
-    }
+function App () {
+    const [robots, setRobots] = useState([])
+    const [searchfield, setSearchfield] = useState('')
+    const [count, setCount] = useState(0)
 
-componentDidMount() {
+useEffect(() => {
     fetch('https://jsonplaceholder.typicode.com/users')
         .then(response => response.json())
-        .then(user => {this.setState({robots: user})});
+        .then(user => {setRobots(user)});
+},[count])
+
+const onChangeSearch = (searched) => {
+    setSearchfield(searched.target.value)
 }
 
-    onChangeSearch = (searched) => {
-        this.setState({ searchfield: searched.target.value })
-    }
+const filteredRobots = robots.filter(robot => {
+    return robot.name.toLowerCase().includes(searchfield.toLowerCase());
+}) 
 
-    render() {
-        const { robots, searchfield } = this.state;
-        const filteredRobots = robots.filter(robot => {
-            return robot.name.toLowerCase().includes(searchfield.toLowerCase());
-        }) 
-
-        return !robots.length ?
-            <h1>loading... wait for the robots to engage...</h1> :
-            (
-                <div className="tc">
-                    <h1>RoboFriends</h1>
-                    < SearchBox searchChange = { this.onChangeSearch }/>
-                    <Scroll>
-                        <ErrorBoundry>
-                            < Cardlist robots = { filteredRobots } />
-                        </ErrorBoundry>
-                    </Scroll>
-                </div>
-            );
-    }
+return !robots.length ?
+    <h1>loading... wait for the robots to engage...</h1> :
+    (
+        <div className="tc">
+            <h1>RoboFriends</h1>
+            < SearchBox searchChange = { onChangeSearch }/>
+            <button 
+                onClick={() => setCount(count+1)}>Click Me or Die!
+            </button>
+            <Scroll>
+                <ErrorBoundry>
+                    < Cardlist robots = { filteredRobots } />
+                </ErrorBoundry>
+            </Scroll>
+        </div>
+    );
 }
 
 export default App;
